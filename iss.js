@@ -14,26 +14,49 @@ const request = require('request');
 const fetchMyIP = function(callback) {
   // use request to fetch IP address from JSON API
   request('https://api.ipify.org/?format=json', (error, response, body) => {
-
     // checking for request error.
     if (error) {
       callback(error, null);
       return;
     }
-
     // if non-200 status, assume server error
     if (response.statusCode !== 200) {
       const msg = `Status Code ${response.statusCode} when fetching IP. Response: ${body}`;
       callback(Error(msg), null);
       return;
     }
-
     // if we get here, all's well and we got the data
     const ip = JSON.parse(body).ip;
     callback(null, ip);
     // return callback(null, ip)  <-- this works as well
-
   });
 };
 
+
+// fetchCoordsByIP will be one that takes in an IP address and returns the latitude and longitude for it.
+
+
+const fetchCoordsByIP = function(ip, callback) {
+  request(`https://ipvigilante.com/json/${ip}`, (error, response, body) => {
+    if (error) {
+      callback(error, null);
+      return;
+    }
+
+    if (response.statusCode !== 200) {
+      callback(Error(`Status Code ${response.statusCode} when fetching Coordinates for IP: ${body}`), null);
+      return;
+    }
+
+    const { latitude, longitude } = JSON.parse(body).data;
+
+    callback(null, { latitude, longitude });
+  });
+};
+
+// Don't need to export the other function since we are not testing it right now.
+module.exports = { fetchCoordsByIP };
+
+
 module.exports = { fetchMyIP };
+
