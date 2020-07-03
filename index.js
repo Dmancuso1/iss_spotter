@@ -1,49 +1,29 @@
-// https://web.compass.lighthouselabs.ca/days/w02d4/activities/895
-// this will require and run our MAIN function.
+const { nextISSTimesForMyLocation } = require('./iss');
 
-// index.js
-
-
-const { fetchMyIP, fetchCoordsByIP, fetchISSFlyOverTimes  } = require('./iss');
-
-
-
-// The code below is temporary (for testing) and can be commented out.
-
-//////////////////////////////////////////////
-fetchMyIP((error, ip) => {
-  if (error) {
-    console.log(`🚫It didn't work! ${error}`);
-    return;
+/** 
+ * Input: 
+ *   Array of data objects defining the next fly-overs of the ISS.
+ *   [ { risetime: <number>, duration: <number> }, ... ]
+ * Returns: 
+ *   undefined
+ * Sideffect: 
+ *   Console log messages to make that data more human readable.
+ *   Example output:
+ *   Next pass at Mon Jun 10 2019 20:11:44 GMT-0700 (Pacific Daylight Time) for 468 seconds!
+ */
+const printPassTimes = function(passTimes) {
+  for (const pass of passTimes) {
+    const datetime = new Date(0);
+    datetime.setUTCSeconds(pass.risetime);
+    const duration = pass.duration;
+    console.log(`Next pass at ${datetime} for ${duration} seconds!`);
   }
-  console.log('✅ Returned IP:' , ip);
-});
+};
 
-
-// The code below is temporary (for testing) and can be commented out.
-
-//////////////////////////////////////////////
-const testIP = '184.146.103.194';
-fetchCoordsByIP(testIP, (error, coords) => {
+nextISSTimesForMyLocation((error, passTimes) => {
   if (error) {
-    console.log(`🚫It didn't work! ${error}`);
-    return;
+    return console.log("It didn't work!", error);
   }
-
-  console.log('✅ Returned Coords:' , coords);
-});
-
-// The code below is temporary (for testing) and can be commented out.
-
-//////////////////////////////////////////////
-
-const exampleCoords = { latitude: '43.6', longitude: '-79.3' };
-
-fetchISSFlyOverTimes(exampleCoords, (error, issData) => {
-  if (error) {
-    console.log(`🚫It didn't work! , ${error}`);
-    return;
-  }
-
-  console.log('✅ Returned Coords:' , issData);
+  // success, print out the deets!
+  printPassTimes(passTimes);
 });
