@@ -4,28 +4,46 @@
 // index.js
 
 
-const { fetchMyIP } = require('./iss');
+const { fetchMyIP, fetchCoordsByIP, fetchISSFlyOverTimes  } = require('./iss');
 
 
+
+// The code below is temporary (for testing) and can be commented out.
+
+//////////////////////////////////////////////
 fetchMyIP((error, ip) => {
   if (error) {
-    console.log("It didn't work!" , error);
+    console.log(`🚫It didn't work! ${error}`);
     return;
   }
-  console.log('It worked! Returned IP:' , ip);
+  console.log('✅ Returned IP:' , ip);
 });
 
 
-// The code below is temporary and can be commented out.
-const { fetchCoordsByIP } = require('./iss');
+// The code below is temporary (for testing) and can be commented out.
 
-fetchCoordsByIP('184.146.103.194', (error, coords) => {
+//////////////////////////////////////////////
+const testIP = '184.146.103.194';
+fetchCoordsByIP(testIP, (error, coords) => {
   if (error) {
-    console.log("It didn't work!" , error);
+    console.log(`🚫It didn't work! ${error}`);
     return;
   }
 
-  console.log('It worked! Returned Coords:' , coords);
+  console.log('✅ Returned Coords:' , coords);
 });
 
+// The code below is temporary (for testing) and can be commented out.
 
+//////////////////////////////////////////////
+
+const exampleCoords = { latitude: '43.6', longitude: '-79.3' };
+
+fetchISSFlyOverTimes(exampleCoords, (error, issData) => {
+  if (error) {
+    console.log(`🚫It didn't work! , ${error}`);
+    return;
+  }
+
+  console.log('✅ Returned Coords:' , issData);
+});
